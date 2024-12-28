@@ -1,0 +1,249 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CompanyDetails {
+  id             Int     @id @default(autoincrement())
+  companyLogo    String? @map("company_logo_src")
+  companyName    String
+  companyWebLogo String?
+  fullName       String?
+
+  @@map("company_details")
+}
+
+model SocialLinks {
+  id        Int    @id @default(autoincrement())
+  platform  String
+  iconClass String
+  link      String
+
+  footer_social_media       FooterSocialMedia[]
+  hero_section_media        HeroSectionMedia[]
+  social_section_media      SocialSectionMedia[]
+  contact_page_social_media ContactPageSocialMedia[]
+
+  @@map("social_links")
+}
+
+// Footer Tables
+model FooterSide {
+  id          Int     @id @default(autoincrement())
+  heading     String?
+  logoImg     String?
+  copyright   String?
+  searchTools String? @map("search_tools")
+
+  @@map("footer")
+}
+
+model FooterSocialMedia {
+  id            Int @id @default(autoincrement())
+  socialMediaId Int
+
+  socialMedia SocialLinks @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+
+  @@map("footer_social_media")
+}
+
+// Home Page Data
+model HeroSection {
+  id            Int     @id @default(autoincrement())
+  subtitle      String
+  backgroundImg String
+  title         String
+  description   String
+  buttonText    String
+  buttonSrc     String
+  action        Boolean @default(false)
+
+  @@map("hero_section")
+}
+
+model HeroSectionMedia {
+  id            Int    @id @default(autoincrement())
+  text          String
+  socialMediaId Int
+
+  socialMedia SocialLinks @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+
+  @@map("hero_section_media")
+}
+
+model OperationSection {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  action      Boolean @default(false)
+
+  @@map("operation_section")
+}
+
+model Operations {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  iconClass   String
+  link        String
+  action      Boolean
+  place       Int
+
+  @@map("operations")
+}
+
+model WhyUsSection {
+  id     Int     @id @default(autoincrement())
+  title  String
+  action Boolean @default(false)
+}
+
+model WhyUsFeatures {
+  id Int @id @default(autoincrement())
+
+  title       String
+  description String?
+  image       String
+}
+
+model SocialSection {
+  id     Int     @id @default(autoincrement())
+  title  String
+  action Boolean @default(false)
+
+  @@map("social_section")
+}
+
+model SocialSectionMedia {
+  id            Int @id @default(autoincrement())
+  socialMediaId Int
+
+  socialMedia SocialLinks @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+
+  @@map("social_section_media")
+}
+
+model GoFormSection {
+  id         Int     @id @default(autoincrement())
+  title      String
+  buttonText String
+  buttonSrc  String
+  iconClass  String
+  action     Boolean @default(false)
+}
+
+// About Page
+model AboutPageSection {
+  id          Int     @id @default(autoincrement())
+  title       String
+  action      Boolean @default(true)
+  imgSrc      String
+  description String?
+
+  @@map("about_page_section")
+}
+
+model PurposeSection {
+  id          Int     @id @default(autoincrement())
+  title       String
+  action      Boolean @default(true)
+  description String?
+  catalog     Json
+
+  @@map("purpose_section")
+}
+
+model OtherWorkSection {
+  id            Int     @id @default(autoincrement())
+  backgroundImg String
+  action        Boolean @default(true)
+  overlay       Json
+
+  @@map("othwe_work_section")
+}
+
+// Price Pages Tables
+model DocumentSelection {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+
+  @@map("document_selection")
+}
+
+model PriceOption {
+  id        Int     @id @default(autoincrement())
+  buttonSrc String
+  iconClass String
+  title     String
+  action    Boolean @default(true)
+
+  @@map("price_option")
+}
+
+// Contact Page Data
+model ContactPage {
+  id          Int     @id @default(autoincrement())
+  header      String
+  description String?
+  action      Boolean @default(true)
+
+  @@map("contact_page")
+}
+
+model ContactPageSocialMedia {
+  id            Int @id @default(autoincrement())
+  socialMediaId Int
+
+  socialMedia SocialLinks @relation(fields: [socialMediaId], references: [id], onDelete: Cascade)
+
+  @@map("contact_page_social_media")
+}
+
+// Profile Data Tables
+
+model Profile {
+  id           Int  @id @default(autoincrement())
+  presentation Json
+
+  @@map("profile")
+}
+
+// Forms Tables
+
+model Books {
+  id    Int     @id @default(autoincrement())
+  type  String
+  data  Json
+  price Decimal
+
+  @@map("books")
+}
+
+model Forms {
+  id    Int    @id @default(autoincrement())
+  type  String
+  data  Json
+  price Json
+  title String
+
+  @@map("forms")
+}
+
+model FormsDefault {
+  id        Int    @id @default(autoincrement())
+  modelText String
+  wpNumber  String
+
+  @@map("forms-default")
+}
